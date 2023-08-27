@@ -1,0 +1,19 @@
+{
+    "name": "manueldinis/smoothtranslations",
+    "description": "A Package that aims to make translations your web apps an easier task",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Manueldinis\\Smoothtranslations\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ManuelDinis",
+            "email": "4228@feppv.pt"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
