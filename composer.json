@@ -1,6 +1,6 @@
 {
     "name": "manueldinis/smoothtranslations",
-    "description": "A simple Package that aims to make translations your web apps an easier task",
+    "description": "A simple Package that aims to make translations for your web apps an easier task",
     "type": "composer-plugin",
     "extra": {
         "class": "Manueldinis\\Smoothtranslations\\Translator"
@@ -19,5 +19,6 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {},
+    "require-dev": {}
 }
