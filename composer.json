@@ -2,7 +2,9 @@
     "name": "manueldinis/smoothtranslations",
     "description": "A simple Package that aims to make translations your web apps an easier task",
     "type": "composer-plugin",
-    "minimum-stability": "dev-main",
+    "extra": {
+        "class": "Manueldinis\\Smoothtranslations\\TranslatorPlugin"
+    },
     "prefer-stable": true,
     "license": "MIT",
     "autoload": {
