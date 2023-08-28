@@ -3,7 +3,15 @@
     "description": "A simple Package that aims to make translations for your web apps an easier task",
     "type": "composer-plugin",
     "extra": {
-        "class": "Manueldinis\\Smoothtranslations\\Translator"
+        "class": "Manueldinis\\Smoothtranslations\\Translator",
+        "my-plugin-config": {
+            "dbConfig": {
+                "host": "localhost",
+                "database": "mydb",
+                "username": "myuser",
+                "password": "mypassword"
+            }
+        }
     },
     "prefer-stable": true,
     "license": "MIT",
