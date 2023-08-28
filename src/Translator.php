@@ -17,7 +17,7 @@ class Translator implements PluginInterface
     private $pdo;
     private $lang = ""; // Language to translate to
 
-    public function __construct(array $dbConfig)
+    public function __construct(array $dbConfig, $lang = null)
     {
         $this->dbConfig = $dbConfig;
 
@@ -42,7 +42,7 @@ class Translator implements PluginInterface
             throw new Exception("There was an error during setup.");
         }
     }
-    
+
     public function set_language(String $lang)
     {
         $this->lang = $lang;
