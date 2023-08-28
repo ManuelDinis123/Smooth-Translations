@@ -3,8 +3,8 @@
 namespace Manueldinis\Smoothtranslations;
 
 use Exception;
+use InvalidArgumentException;
 use PDO;
-use Ramsey\Uuid\Type\Integer;
 
 class Translator
 {
@@ -48,6 +48,9 @@ class Translator
      */
     public function translate(String $text)
     {
+        if (strlen($text) === 0) {
+            throw new InvalidArgumentException("Can't Translate Empty String.");
+        }
         try {
             $searchText = $text;
             $language = $this->lang;
@@ -62,7 +65,7 @@ class Translator
             $stmt->execute();
 
             $results = $stmt->fetch(PDO::FETCH_ASSOC);
-            return isset($results["translation"])?$results["translation"]:"no_translation($text)";
+            return isset($results["translation"]) ? $results["translation"] : "no_translation($text)";
         } catch (\PDOException $e) {
             throw new Exception("There was an error! " . $e->getMessage());
         }
@@ -77,10 +80,13 @@ class Translator
     public function add_language(String $langname)
     {
         try {
+            // Check if langname consists only of letters and spaces
+            if (!filter_var($langname, FILTER_VALIDATE_REGEXP, ['options' => ['regexp' => '/^[a-zA-Z\s]+$/']])) {
+                throw new InvalidArgumentException("Invalid language name.");
+            }
 
-            $sql = "INSERT INTO `st_langs`(`language`) VALUES (:langname)";
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute(["langname" => $langname]);
+            $result = $this->_insert("INSERT INTO `st_langs`(`language`) VALUES (:langname)")
+                ->execute(["langname" => $langname]);
 
             return $result ? ["status" => "success", "message" => "Language inserted successfully"]
                 : ["status" => "error", "message" => "Error inserting the language"];
@@ -98,10 +104,8 @@ class Translator
     public function add_text(String $text)
     {
         try {
-
-            $sql = "INSERT INTO `st_texts`(`text`) VALUES (:text)";
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute(["text" => $text]);
+            $result =  $this->_insert("INSERT INTO `st_texts`(`text`) VALUES (:text)")
+                ->execute(["text" => $text]);
 
             return $result ? ["status" => "success", "message" => "Text inserted successfully"]
                 : ["status" => "error", "message" => "Error inserting the text"];
@@ -121,12 +125,9 @@ class Translator
     public function add_translation(String $translation, Int $language_id, Int $text_id)
     {
         try {
-
-            $sql = "INSERT INTO `st_translations`(`lang_id`, `text_id`, `translation`)
-                    VALUES (:lang, :text, :translation)";
-
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute(["lang"=>$language_id, "text" => $text_id, "translation"=>$translation]);
+            $result = $this->_insert("INSERT INTO `st_translations`(`lang_id`, `text_id`, `translation`)
+            VALUES (:lang, :text, :translation)")
+                ->execute(["lang" => $language_id, "text" => $text_id, "translation" => $translation]);
 
             return $result ? ["status" => "success", "message" => "Translation inserted successfully"]
                 : ["status" => "error", "message" => "Error inserting the translation"];
@@ -135,7 +136,61 @@ class Translator
         }
     }
 
-    // TODO: Get methods for tables
+    /**
+     * Gets all inserted languages
+     * 
+     * @return JSON
+     */
+    public function get_languages(Int $id = null, Bool $json = false)
+    {
+        $languages = [];
+        foreach ($this->_get("SELECT * FROM st_langs" . (isset($id) ? "WHERE id = " . $id : "")) as $key => $langs) {
+            $languages[] = [
+                "id" => $langs['id'],
+                "language" => $langs['language'],
+            ];
+        }
+        return $json ? json_encode($languages) : $languages;
+    }
+
+    /**
+     * Gets all inserted Texts
+     * 
+     * @return JSON
+     */
+    public function get_texts(Int $id = null, Bool $json = false)
+    {
+        foreach ($this->_get("SELECT * FROM st_texts " . (isset($id) ? "WHERE id = " . $id : "")) as $key => $text) {
+            $texts[] = [
+                "id" => $text['id'],
+                "text" => $text['text'],
+            ];
+        }
+        return $json ? json_encode($texts) : $texts;
+    }
+
+    /**
+     * Gets all inserted Translations
+     * 
+     * @return JSON
+     */
+    public function get_translations(Int $id = null, Bool $json = false)
+    {
+        $query = "SELECT * FROM st_translations 
+        inner join st_texts on st_translations.text_id = st_texts.id
+        inner join st_langs on st_langs.id = st_translations.lang_id
+        " . (isset($id) ? "WHERE st_translations.id = " . $id : "");
+
+        foreach ($this->_get($query) as $key => $translation) {
+            $translations[] = [
+                "id" => $translation['id'],
+                "lang" => $translation['language'],
+                "text" => $translation['text'],
+                "translation" => $translation['translation'],
+            ];
+        }
+        return $json ? json_encode($translations) : $translations;
+    }
 
     // Check if table already exists
     private function tablesExist()
@@ -147,5 +202,20 @@ class Translator
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $result !== false;
+    }
+
+    // Queries
+    private function _get(String $query)
+    {
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+    }
+
+    // Do the start of inserting with PDO
+    private function _insert(String $query)
+    {
+        return $this->pdo->prepare($query);
     }
 }

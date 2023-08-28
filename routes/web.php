@@ -22,10 +22,10 @@ Route::get('/', function () {
         "password" => "",
     ], "pt");
 
-    // $translator->add_language("italian");
-    // $translator->add_text("hello world");
-    $translator->add_translation("Hello World", 1, 2);
-    $translator->add_translation("Olá Mundo", 2, 2);
+    // $translator->add_language("Russian");
+    // $translator->add_text("new table");
+    // $translator->add_translation("New Table", 1, 3);
+    // $translator->add_translation("Nova Tabela", 2, 3);
 
 
     return view('index')->with("translator", $translator);
