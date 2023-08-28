@@ -19,6 +19,8 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "composer-plugin-api": "^1.0"
+    },    
     "require-dev": {}
 }
