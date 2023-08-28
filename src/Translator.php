@@ -5,8 +5,11 @@ namespace Manueldinis\Smoothtranslations;
 use Exception;
 use InvalidArgumentException;
 use PDO;
+use Composer\Composer;
+use Composer\IO\IOInterface;
+use Composer\Plugin\PluginInterface;
 
-class Translator
+class Translator implements PluginInterface
 {
 
     // Database configurations
