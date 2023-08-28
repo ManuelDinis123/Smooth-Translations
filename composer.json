@@ -1,6 +1,5 @@
 {
     "name": "manueldinis/smoothtranslations",
-    "version": "1.0.0",
     "description": "A simple Package that aims to make translations your web apps an easier task",
     "type": "composer-plugin",
     "license": "MIT",
