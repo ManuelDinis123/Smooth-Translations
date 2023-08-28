@@ -18,7 +18,7 @@
             "email": "4228@feppv.pt"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "1.0.0",
     "require": {},
     "require-dev": {}
 }
