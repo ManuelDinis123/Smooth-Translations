@@ -5,8 +5,11 @@ namespace Manueldinis\Smoothtranslations;
 use Exception;
 use InvalidArgumentException;
 use PDO;
+use Composer\Composer;
+use Composer\IO\IOInterface;
+use Composer\Plugin\PluginInterface;
 
-class Translator
+class Translator implements PluginInterface
 {
 
     // Database configurations
@@ -217,5 +220,11 @@ class Translator
     private function _insert(String $query)
     {
         return $this->pdo->prepare($query);
+    }
+
+    public function activate(Composer $composer, IOInterface $io)
+    {
+        $installer = new TemplateInstaller($io, $composer);
+        $composer->getInstallationManager()->addInstaller($installer);
     }
 }
