@@ -222,11 +222,7 @@ class Translator implements PluginInterface
         return $this->pdo->prepare($query);
     }
 
-    public function activate(Composer $composer, IOInterface $io)
-    {
-        $installer = new TemplateInstaller($io, $composer);
-        $composer->getInstallationManager()->addInstaller($installer);
-    }
+    public function activate(Composer $composer, IOInterface $io){}
 
     public function deactivate(Composer $composer, IOInterface $io){}
 
