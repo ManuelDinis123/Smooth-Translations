@@ -9,7 +9,7 @@ use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 
-class Translator implements PluginInterface
+class Translator
 {
 
     // Database configurations
@@ -224,10 +224,4 @@ class Translator implements PluginInterface
     {
         return $this->pdo->prepare($query);
     }
-
-    public function activate(Composer $composer, IOInterface $io){}
-
-    public function deactivate(Composer $composer, IOInterface $io){}
-
-    public function uninstall(Composer $composer, IOInterface $io) {}
 }
