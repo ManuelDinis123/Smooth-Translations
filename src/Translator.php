@@ -21,7 +21,9 @@ class Translator implements PluginInterface
     {
         $this->dbConfig = $dbConfig;
 
-        if(count($dbConfig)==0) return;
+        if(count($dbConfig)==0) return "Please send a dbConfig!";
+
+        $this->lang = $lang;
 
         try {
             $this->pdo = new PDO(
@@ -42,11 +44,6 @@ class Translator implements PluginInterface
         } catch (\Throwable $th) {
             throw new Exception("There was an error during setup.");
         }
-    }
-
-    public function set_language(String $lang)
-    {
-        $this->lang = $lang;
     }
 
     /**
