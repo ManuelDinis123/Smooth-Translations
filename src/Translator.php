@@ -17,10 +17,11 @@ class Translator implements PluginInterface
     private $pdo;
     private $lang = ""; // Language to translate to
 
-    public function __construct(array $dbConfig, $lang = null)
+    public function __construct(array $dbConfig = [], $lang = null)
     {
         $this->dbConfig = $dbConfig;
 
+        if(count($dbConfig)==0) return;
 
         try {
             $this->pdo = new PDO(
